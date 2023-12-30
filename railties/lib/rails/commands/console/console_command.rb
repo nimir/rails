@@ -35,7 +35,7 @@ module Rails
         require "irb"
         require "irb/completion"
 
-        IRB::WorkSpace.prepend(BacktraceCleaner)
+        IRB::WorkSpace.prepend(BacktraceCleaner) unless ENV["BACKTRACE"]
 
         if !Rails.env.local?
           ENV["IRB_USE_AUTOCOMPLETE"] ||= "false"

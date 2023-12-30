@@ -153,6 +153,24 @@ class Rails::ConsoleTest < ActiveSupport::TestCase
     end
   end
 
+  def test_console_disables_backtrace_cleaner_when_BACKTRACE_env_is_set
+    switch_env "BACKTRACE", "true" do
+      app = build_app(nil)
+      console = Rails::Console.new(app).console
+
+      assert_not_includes console::WorkSpace.included_modules, Rails::Console::BacktraceCleaner
+    end
+  end
+
+  def test_console_enables_backtrace_cleaner_when_BACKTRACE_env_is_not_set
+    switch_env "BACKTRACE", "false" do
+      app = build_app(nil)
+      console = Rails::Console.new(app).console
+
+      assert_includes console::WorkSpace.included_modules, Rails::Console::BacktraceCleaner
+    end
+  end
+
   attr_reader :output
   private :output
 
